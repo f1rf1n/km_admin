@@ -11,7 +11,7 @@
 # Menu items corresponding to these URLs are defined separately in the
 # km_admin.links.menu.yml file.
 km_admin.description:
-  path: '/config/km-admin'
+  path: '/admin/km'
   defaults:
     _controller:  '\Drupal\km_admin\Controller\Page::description'
     _title: 'KM Admin'
@@ -19,7 +19,7 @@ km_admin.description:
     _permission: 'access content'
 
 km_admin.simple_form:
-  path: '/config/km-admin/simple-form'
+  path: '/admin/km/simple-form'
   defaults:
     _form:  '\Drupal\km_admin\Form\SimpleForm'
     _title: 'Simple form'
@@ -27,7 +27,7 @@ km_admin.simple_form:
     _permission: 'access content'
 
 km_admin.input_demo:
-  path: '/config/km-admin/input-demo'
+  path: '/admin/km/input-demo'
   defaults:
     _form:  '\Drupal\km_admin\Form\InputDemo'
     _title: 'Common input elements'
@@ -35,7 +35,7 @@ km_admin.input_demo:
     _permission: 'access content'
 
 km_admin.state_demo:
-  path: '/config/km-admin/state-demo'
+  path: '/admin/km/state-demo'
   defaults:
     _form:  '\Drupal\km_admin\Form\StateDemo'
     _title: 'Form state binding'
@@ -43,7 +43,7 @@ km_admin.state_demo:
     _permission: 'access content'
 
 km_admin.container_demo:
-  path: '/config/km-admin/container-demo'
+  path: '/admin/km/container-demo'
   defaults:
     _form:  '\Drupal\km_admin\Form\ContainerDemo'
     _title: 'Container elements'
@@ -51,7 +51,7 @@ km_admin.container_demo:
     _permission: 'access content'
 
 km_admin.vertical_tabs_demo:
-  path: '/config/km-admin/vertical-tabs-demo'
+  path: '/admin/km/vertical-tabs-demo'
   defaults:
     _form:  '\Drupal\km_admin\Form\VerticalTabsDemo'
     _title: 'Vertical tab elements'
@@ -59,7 +59,7 @@ km_admin.vertical_tabs_demo:
     _permission: 'access content'
 
 km_admin.modal_form:
-  path: '/config/km-admin/modal-form/{nojs}'
+  path: '/admin/km/modal-form/{nojs}'
   defaults:
     _form:  '\Drupal\km_admin\Form\ModalForm'
     _title: 'Modal form'
@@ -68,7 +68,7 @@ km_admin.modal_form:
     _permission: 'access content'
 
 km_admin.ajax_color_demo:
-  path: '/config/km-admin/ajax-color-demo'
+  path: '/admin/km/ajax-color-demo'
   defaults:
     _form:  '\Drupal\km_admin\Form\AjaxColorForm'
     _title: 'AJAX color form'
@@ -76,7 +76,7 @@ km_admin.ajax_color_demo:
     _permission: 'access content'
 
 km_admin.build_demo:
-  path: '/config/km-admin/build-demo'
+  path: '/admin/km/build-demo'
   defaults:
     _form:  '\Drupal\km_admin\Form\BuildDemo'
     _title: 'Build form demo'
@@ -84,7 +84,7 @@ km_admin.build_demo:
     _permission: 'access content'
 
 km_admin.ajax_addmore:
-  path: '/config/km-admin/ajax-addmore'
+  path: '/admin/km/ajax-addmore'
   defaults:
     _form:  '\Drupal\km_admin\Form\AjaxAddMore'
     _title: 'Add-more button'
@@ -92,7 +92,7 @@ km_admin.ajax_addmore:
     _permission: 'access content'
 
 km_admin.multistep_form:
-  path: '/config/km-admin/multistep-form'
+  path: '/admin/km/multistep-form'
   defaults:
     _form: '\Drupal\km_admin\Form\MultistepForm'
     _title: 'Multistep form'
