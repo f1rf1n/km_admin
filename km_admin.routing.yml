@@ -1,0 +1,100 @@
+# This routing.yml file makes both the fapi example description page and the
+# included sample forms available at specific URL's on your site. A route
+# maps a URL path to a controller. For page controllers it defines the
+# function or method that will be called when the page is accessed.  For form
+# controllers the content is determined by the buildForm method defined by the
+# form controller implementation.
+
+# Access to these paths is restricted to users with the permission
+# 'access content'. This is notated as _permission: 'access content'.
+
+# Menu items corresponding to these URLs are defined separately in the
+# km_admin.links.menu.yml file.
+km_admin.description:
+  path: '/config/km-admin'
+  defaults:
+    _controller:  '\Drupal\km_admin\Controller\Page::description'
+    _title: 'KM Admin'
+  requirements:
+    _permission: 'access content'
+
+km_admin.simple_form:
+  path: '/config/km-admin/simple-form'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\SimpleForm'
+    _title: 'Simple form'
+  requirements:
+    _permission: 'access content'
+
+km_admin.input_demo:
+  path: '/config/km-admin/input-demo'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\InputDemo'
+    _title: 'Common input elements'
+  requirements:
+    _permission: 'access content'
+
+km_admin.state_demo:
+  path: '/config/km-admin/state-demo'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\StateDemo'
+    _title: 'Form state binding'
+  requirements:
+    _permission: 'access content'
+
+km_admin.container_demo:
+  path: '/config/km-admin/container-demo'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\ContainerDemo'
+    _title: 'Container elements'
+  requirements:
+    _permission: 'access content'
+
+km_admin.vertical_tabs_demo:
+  path: '/config/km-admin/vertical-tabs-demo'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\VerticalTabsDemo'
+    _title: 'Vertical tab elements'
+  requirements:
+    _permission: 'access content'
+
+km_admin.modal_form:
+  path: '/config/km-admin/modal-form/{nojs}'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\ModalForm'
+    _title: 'Modal form'
+    nojs: ajax
+  requirements:
+    _permission: 'access content'
+
+km_admin.ajax_color_demo:
+  path: '/config/km-admin/ajax-color-demo'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\AjaxColorForm'
+    _title: 'AJAX color form'
+  requirements:
+    _permission: 'access content'
+
+km_admin.build_demo:
+  path: '/config/km-admin/build-demo'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\BuildDemo'
+    _title: 'Build form demo'
+  requirements:
+    _permission: 'access content'
+
+km_admin.ajax_addmore:
+  path: '/config/km-admin/ajax-addmore'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\AjaxAddMore'
+    _title: 'Add-more button'
+  requirements:
+    _permission: 'access content'
+
+km_admin.multistep_form:
+  path: '/config/km-admin/multistep-form'
+  defaults:
+    _form: '\Drupal\km_admin\Form\MultistepForm'
+    _title: 'Multistep form'
+  requirements:
+    _permission: 'access content'
