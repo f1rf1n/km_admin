@@ -1,0 +1,9 @@
+name: KM Administration
+type: module
+description: Verschillende administraties schermen en functionaliteiten voor KM.
+package: KM
+core: 8.x
+#configure: form_api_example.description
+#dependencies:
+#  - drupal:node
+#  - examples:examples
