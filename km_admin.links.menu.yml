@@ -2,6 +2,7 @@
 km_admin.description:
   title: Korenmaat Administratie
   description: Form examples using Drupal Form API.
+  parent: system.admin_config_development
   route_name: km_admin.description
   expanded: TRUE
 
