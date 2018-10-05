@@ -52,7 +52,7 @@ class ImageImportForm extends FormBase {
     $form['path'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Path'),
-      '#description' => $this->t('Give a directory if it should be different from default ( /resources/ean).'),
+      '#description' => $this->t('Give a directory if it should be different from default ( private://ean).'),
       '#default' => 'private://ean',
       '#required' => TRUE,
     ];
@@ -108,16 +108,22 @@ class ImageImportForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /*
-     * This would normally be replaced by code that actually does something
-     * with the title.
+     * This scan the directory and processes the files found.
      */
     $path = $form_state->getValue('path');
     $this->messenger()->addMessage($this->t('You specified a path of %path.
-      These files were found:', ['%path' => $path]));
+      These files were found: ', ['%path' => $path]));
 
-//    $mask =
-//    $filelist = file_scan_directory($path, $mask, $options = [], $depth = 0);
-
+    // Match all files in directory ending in .jpg. Return assoc array keyed by
+    // the name.
+    $mask = '/.*\.jpg/';
+    $filelist = file_scan_directory($path, $mask, ['key' => 'name']);
+    ksm($filelist[0]);
+//    ksm( array_keys($filelist));
+    // Loop through the names and assign them to their products.
+    foreach ( $filelist as $file) {
+//      ksm( $item);
+    }
   }
 
 }
