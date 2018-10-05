@@ -5,6 +5,7 @@ Description text for the Form API Example.
 #}
 
 {{ attach_library('core/drupal.dialog.ajax') }}
+{% set image_import_form = path('km_admin.image_import_form') %}
 {% set simple_form = path('km_admin.simple_form') %}
 {% set multistep_form = path('km_admin.multistep_form') %}
 {% set input_demo = path('km_admin.input_demo') %}
@@ -18,9 +19,11 @@ Description text for the Form API Example.
 {% set block_admin = path('block.admin_display') %}
 
 {% trans %}
-<p>Form examples to demonstrate common UI solutions using the Drupal Form API</p>
-<p><a href={{ simple_form }}>Simple form</a></p>
-<p><a href={{ multistep_form }}>Multistep form</a></p>
+<p>Administratie pagina voor KM.</p>
+<p><a href={{ image_import_form }}>Plaatjes Importeren</a></p>
+    <p>Met bovenstaande knop kan je de plaatjes toevoegen aan de artikelen.
+        <b>Let wel:</b> Deze moeten geplaatst worden op de webserver in de map /resources/ean. </p>
+    {#<p><a href={{ multistep_form }}>Multistep form</a></p>
 <p><a href={{ input_demo }}>Common input elements</a></p>
 <p><a href={{ build_demo }}>Build form demo</a></p>
 <p><a href={{ container_demo }}>Container elements</a></p>
@@ -35,4 +38,5 @@ Description text for the Form API Example.
     used whenever you need to display a form that is not the primary content of
     a page. You can enable it on your site <a href={{ block_admin }}>using the
     block admin page</a>.</p>
+#}
 {% endtrans %}

@@ -6,6 +6,13 @@ km_admin.description:
   route_name: km_admin.description
   expanded: TRUE
 
+km_admin.image_import_form:
+  title: Image import form
+  description: A simple form with a single submit button processing.
+  route_name: km_admin.image_import_form
+  parent: km_admin.description
+  weight: -10
+
 km_admin.simple_form:
   title: Simple form
   description: A simple form example with submit processing.

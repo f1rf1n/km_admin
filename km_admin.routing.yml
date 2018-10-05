@@ -18,6 +18,14 @@ km_admin.description:
   requirements:
     _permission: 'access content'
 
+km_admin.image_import_form:
+  path: '/admin/km/image-import-form'
+  defaults:
+    _form:  '\Drupal\km_admin\Form\ImageImportForm'
+    _title: 'Image import'
+  requirements:
+    _permission: 'access content'
+
 km_admin.simple_form:
   path: '/admin/km/simple-form'
   defaults:
