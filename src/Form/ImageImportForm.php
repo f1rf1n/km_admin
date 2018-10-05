@@ -118,11 +118,13 @@ class ImageImportForm extends FormBase {
     // the name.
     $mask = '/.*\.jpg/';
     $filelist = file_scan_directory($path, $mask, ['key' => 'name']);
-    ksm($filelist[0]);
+
+    $stukje = array_slice($filelist, 1, 3);
+    ksm($filelist);
 //    ksm( array_keys($filelist));
     // Loop through the names and assign them to their products.
-    foreach ( $filelist as $file) {
-//      ksm( $item);
+    foreach ( $stukje as $file) {
+      ksm( $file );
     }
   }
 
