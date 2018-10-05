@@ -4,6 +4,11 @@ namespace Drupal\km_admin\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+//use Drupal\file\FileInterface;
+//use Drupal\Core\File\FileSystemInterface;
+
+// voor bestandopslaan
 
 /**
  * Implements the SimpleForm form controller.
@@ -119,12 +124,40 @@ class ImageImportForm extends FormBase {
     $mask = '/.*\.jpg/';
     $filelist = file_scan_directory($path, $mask, ['key' => 'name']);
 
-    $stukje = array_slice($filelist, 1, 3);
-    ksm($filelist);
-//    ksm( array_keys($filelist));
+    $stukje = array_slice($filelist, 2550, 1000);
+    ksm($stukje);
+    ksm( array_keys($filelist));
+
     // Loop through the names and assign them to their products.
     foreach ( $stukje as $file) {
-      ksm( $file );
+//      $imgUri = file_build_uri("import/default_image.jpg");
+      $imgFile = File::Create(['uri' => $file->uri]);
+      $imgFile->save();
+//      ksm($imgFile);
+
+      // Get the products
+      $product_storage = \Drupal::entityTypeManager()->getStorage('commerce_product');
+      $query = \Drupal::entityQuery('commerce_product')
+        ->condition('type', 'default')
+        ->condition('field_ean', $file->name);
+      $pids = $query->execute();
+      $nodes = $product_storage->loadMultiple($pids);
+//      ksm($nodes);
+      foreach ($nodes as $n) {
+        $n->field_image = $imgFile;
+        $n->save();
+      }
+  //    use Drupal\node\Entity\Node;
+//    ...
+//    $node = Node::create([
+//      'type' => 'article',
+//      'title' => 'Test article',
+//      'field_image' => $imgFile,
+//            ...
+//        ]);
+//    $node->save();
+
+//      ksm( $file );
     }
   }
 
