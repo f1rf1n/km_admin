@@ -3,7 +3,7 @@ type: module
 description: Verschillende administraties schermen en functionaliteiten voor KM.
 package: KM
 core: 8.x
-#configure: form_api_example.description  ,_ maak tconfigure link op 'extend pagina
+#configure: form_api_example.description  , maakt configure link op 'extend pagina
 dependencies:
 #  - drupal:node
   - examples:examples

@@ -57,8 +57,8 @@ class ImageImportForm extends FormBase {
     $form['path'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Path'),
-      '#description' => $this->t('Give a directory if it should be different from default ( private://ean).'),
-      '#default' => 'private://ean',
+      '#description' => $this->t('Give a directory if it should be different from default ( public://ean).'),
+      '#default_value' => 'public://ean',
       '#required' => TRUE,
     ];
 
@@ -105,6 +105,8 @@ class ImageImportForm extends FormBase {
    * Implements a form submit handler.
    *
    * The submitForm method is the default method called for any submit elements.
+   * For Image import it gets the filelist from the given path and runs through
+   * it.
    *
    * @param array $form
    *   The render array of the currently built form.
@@ -116,49 +118,41 @@ class ImageImportForm extends FormBase {
      * This scan the directory and processes the files found.
      */
     $path = $form_state->getValue('path');
-    $this->messenger()->addMessage($this->t('You specified a path of %path.
-      These files were found: ', ['%path' => $path]));
+    $this->messenger()->addStatus($this->t('You specified a path of %path.
+      These files were found: ', ['%path' => $path]), TRUE);
 
     // Match all files in directory ending in .jpg. Return assoc array keyed by
     // the name.
     $mask = '/.*\.jpg/';
     $filelist = file_scan_directory($path, $mask, ['key' => 'name']);
 
-    $stukje = array_slice($filelist, 2550, 1000);
-    ksm($stukje);
-    ksm( array_keys($filelist));
+    // Get a piece of the filelist, whole list is too much for direct processing
+    // TODO: build a queue and worker for this.
+    $stukje = array_slice($filelist, 0, 500);
+//    ksm($stukje, 'stukje');
+//    ksm( array_keys($filelist), 'keys filelist');
 
     // Loop through the names and assign them to their products.
     foreach ( $stukje as $file) {
 //      $imgUri = file_build_uri("import/default_image.jpg");
+      // Create the file in DB and save the file.
       $imgFile = File::Create(['uri' => $file->uri]);
       $imgFile->save();
 //      ksm($imgFile);
 
-      // Get the products
+      // Get the products, by their field_ean value.
       $product_storage = \Drupal::entityTypeManager()->getStorage('commerce_product');
       $query = \Drupal::entityQuery('commerce_product')
         ->condition('type', 'default')
         ->condition('field_ean', $file->name);
       $pids = $query->execute();
-      $nodes = $product_storage->loadMultiple($pids);
+      $products = $product_storage->loadMultiple($pids);
 //      ksm($nodes);
-      foreach ($nodes as $n) {
-        $n->field_image = $imgFile;
-        $n->save();
+      // And set their imagefi
+      foreach ($products as $product) {
+        $product->field_image = $imgFile;
+        $product->save();
       }
-  //    use Drupal\node\Entity\Node;
-//    ...
-//    $node = Node::create([
-//      'type' => 'article',
-//      'title' => 'Test article',
-//      'field_image' => $imgFile,
-//            ...
-//        ]);
-//    $node->save();
-
-//      ksm( $file );
     }
   }
-
 }
