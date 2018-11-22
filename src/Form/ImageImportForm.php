@@ -4,7 +4,6 @@ namespace Drupal\km_admin\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\file\Entity\File;
 //use Drupal\file\FileInterface;
 //use Drupal\Core\File\FileSystemInterface;
 
@@ -114,45 +113,40 @@ class ImageImportForm extends FormBase {
    *   Object describing the current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    /*
-     * This scan the directory and processes the files found.
-     */
-    $path = $form_state->getValue('path');
+    $batch = $this->generateImageMatchBatch($form_state->getValue('path'));
+    batch_set($batch);
+  }
+
+
+  /*
+   * This scan the directory and batches the files found.
+   */
+  public function generateImageMatchBatch($path) {
+//    $path = $form_state->getValue('path');
     $this->messenger()->addStatus($this->t('You specified a path of %path.
       These files were found: ', ['%path' => $path]), TRUE);
 
-    // Match all files in directory ending in .jpg. Return assoc array keyed by
-    // the name.
+    // Match all files in directory ending in .jpg or .png. Return assoc array
+    // keyed by the name.
     $mask = '/.*\.jpg/';
     $filelist = file_scan_directory($path, $mask, ['key' => 'name']);
+    $num_files = count($filelist);
 
-    // Get a piece of the filelist, whole list is too much for direct processing
-    // TODO: build a queue and worker for this.
-    $stukje = array_slice($filelist, 0, 500);
-//    ksm($stukje, 'stukje');
-//    ksm( array_keys($filelist), 'keys filelist');
-
-    // Loop through the names and assign them to their products.
-    foreach ( $stukje as $file) {
-//      $imgUri = file_build_uri("import/default_image.jpg");
-      // Create the file in DB and save the file.
-      $imgFile = File::Create(['uri' => $file->uri]);
-      $imgFile->save();
-//      ksm($imgFile);
-
-      // Get the products, by their field_ean value.
-      $product_storage = \Drupal::entityTypeManager()->getStorage('commerce_product');
-      $query = \Drupal::entityQuery('commerce_product')
-        ->condition('type', 'default')
-        ->condition('field_ean', $file->name);
-      $pids = $query->execute();
-      $products = $product_storage->loadMultiple($pids);
-//      ksm($nodes);
-      // And set their imagefi
-      foreach ($products as $product) {
-        $product->field_image = $imgFile;
-        $product->save();
-      }
+    // Loop through the files and place them in the batches' operation.
+    foreach ( $filelist as $file) {
+      // Call image_match_op($file) from km_admin_module.
+      $operations[] = [
+        'image_match_op',
+        [ $file ],
+      ];
     }
+    // Finish building the batch and return it.
+    $batch = [
+      'title' => $this->t('Processing a list of @num files', ['@num' => $num_files]),
+      'operations' => $operations,
+      'finished' => 'image_match_batch_finished',
+      'progress_message' => t('Completed @current of @total' ),
+    ];
+    return $batch;
   }
 }
