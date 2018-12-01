@@ -4,6 +4,7 @@ namespace Drupal\km_admin\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 //use Drupal\file\FileInterface;
 //use Drupal\Core\File\FileSystemInterface;
 
@@ -61,6 +62,17 @@ class ImageImportForm extends FormBase {
       '#required' => TRUE,
     ];
 
+//    $default_date = DrupalDateTime::createFromTimestamp(strtotime($config->get('date')));
+    $default_date =  DrupalDateTime::createFromTimestamp(\Drupal::time()->getCurrentTime());
+    // TODO: set default values to the one saved from last time (when it gets saved)
+    $form['date'] = [
+      '#type' => 'datetime',
+      '#title' => $this->t('Importeer vanaf'),
+      '#description' => $this->t('Hier kan je opgeven vanaf welke datum er geïmporteerd moet worden. Standaard staat hier de huidige datum ingevuld. DEZE DIEN JE DUS AAN TE PASSEN.'),
+      '#default_value' => $default_date,
+      '#required' => TRUE,
+    ];
+
     return $form;
   }
 
@@ -92,7 +104,7 @@ class ImageImportForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
 
-    $title = $form_state->getValue('path');
+//    $title = $form_state->getValue('path');
     //mck todo: check if path is valid, else return closest match.
 //    if (strlen($title) < 5) {
 //      // Set an error for the form element with a key of "title".
@@ -113,7 +125,11 @@ class ImageImportForm extends FormBase {
    *   Object describing the current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $batch = $this->generateImageMatchBatch($form_state->getValue('path'));
+    // TODO: Save the filled out $date to let it be used on the next run.
+//    $datetime_now =  DrupalDateTime::createFromTimestamp(\Drupal::time()->getCurrentTime());
+    $datetime_set = $form_state->getValue('date');
+//    ksm( 'dates now and set', $datetime_now, $datetime_set);
+    $batch = $this->generateImageMatchBatch($form_state->getValue('path'), $datetime_set);
     batch_set($batch);
   }
 
@@ -121,28 +137,46 @@ class ImageImportForm extends FormBase {
   /*
    * This scan the directory and batches the files found.
    */
-  public function generateImageMatchBatch($path) {
+  public function generateImageMatchBatch($path, $date) {
 //    $path = $form_state->getValue('path');
+    // Send some feedback: path and date used.
     $this->messenger()->addStatus($this->t('You specified a path of %path.
-      These files were found: ', ['%path' => $path]), TRUE);
+      Laatste import was %date.', ['%path' => $path, '%date' => $date]), TRUE);
+    // Change the date back to a timestamp so we can compare it to mtime later.
+    $last = $date->getTimestamp();
 
+
+    // Initialize operations to prevent errors on NULL.
+    $operations = [];
     // Match all files in directory ending in .jpg or .png. Return assoc array
     // keyed by the name.
-    $mask = '/.*\.jpg/';
+    $mask = '/.*\.[png|jpg]/'; # [png|jpg]
     $filelist = file_scan_directory($path, $mask, ['key' => 'name']);
-    $num_files = count($filelist);
+//    ksm($filelist);
+    $total_files = count($filelist);
 
     // Loop through the files and place them in the batches' operation.
     foreach ( $filelist as $file) {
+      // Check if file is newer than the specified date.
+//      ksm($file, 'file');
+      $output_file_time = filemtime($file->uri);
+//      ksm('output_file_time', $output_file_time, 'last', $last);
+      //  Skip if the file was modified before the last run.
+      if ( $output_file_time < $last) {
+//        ksm('kleiner', $file->name);
+        continue;
+      }
       // Call image_match_op($file) from km_admin_module.
       $operations[] = [
         'image_match_op',
         [ $file ],
       ];
     }
-    // Finish building the batch and return it.
+//    ksm('operations', $operations);
+    $num_files = count( $operations );
+    // If there are operations, finish building the batch and return it.
     $batch = [
-      'title' => $this->t('Processing a list of @num files', ['@num' => $num_files]),
+      'title' => $this->t('Processing a list of @num files (of @total found)', ['@num' => $num_files, '@total' => $total_files]),
       'operations' => $operations,
       'finished' => 'image_match_batch_finished',
       'progress_message' => t('Completed @current of @total' ),

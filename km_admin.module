@@ -31,7 +31,7 @@ function image_match_op($file, &$context) {
   foreach ($products as $product) {
     $product->field_image = $imgFile;
     $product->save();
-    ksm($product, 'product in ');
+//    ksm($product, 'product in ');
     $feedback .= ' '. $product->id();
   }
   // Save some (for) feedback. Available as $results in the 'finished' function.
@@ -48,7 +48,7 @@ function image_match_batch_finished($success, $results, $operations) {
     // We just display the number of nodes we processed...
     $messenger->addMessage(t('@count files processed.', ['@count' => count($results)]));
     $messenger->addMessage(t('The final result was "%final"', ['%final' => end($results)]));
-    ksm($results, 'debug eind resultaat');
+//    ksm($results, 'debug eind resultaat');
   }
   else {
     // An error occurred.
